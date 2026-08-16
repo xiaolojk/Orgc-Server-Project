@@ -93,11 +93,16 @@ document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") closePayModal();
 });
 
-// ---------- 申请表单（通过邮件发送给你） ----------
+// ---------- 表单中转（FormSubmit → 发到你邮箱） ----------
 const form = document.getElementById("apply-form");
 const msg = document.getElementById("form-msg");
 
-form.addEventListener("submit", (ev) => {
+function setMsg(ok, text) {
+  msg.className = ok ? "form-msg ok" : "form-msg err";
+  msg.textContent = text;
+}
+
+form.addEventListener("submit", async (ev) => {
   ev.preventDefault();
   const nick = form.nick.value.trim();
   const email = form.email.value.trim();
@@ -105,23 +110,40 @@ form.addEventListener("submit", (ev) => {
   const desc = form.desc.value.trim();
 
   if (!nick || !email || !game) {
-    msg.className = "form-msg err";
-    msg.textContent = "请填写你的称呼、常用邮箱，并选择服务器类型。";
+    setMsg(false, "请填写你的称呼、常用邮箱，并选择服务器类型。");
+    return;
+  }
+  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
+    setMsg(false, "请填写有效的邮箱地址。");
     return;
   }
 
-  const subject = encodeURIComponent(`[Orgc 开通申请] ${nick} · ${game}`);
-  const body = encodeURIComponent(
-    "这是一封来自 Orgc 云网站的申请信息：\n\n" +
-    `称呼 / 昵称：${nick}\n` +
-    `邮箱：${email}\n` +
-    `服务器类型：${game}\n` +
-    `详细介绍：${desc ? desc : "（未填写）"}\n\n` +
-    "请在 24 小时内处理该开通申请，谢谢！"
-  );
+  const btn = form.querySelector("[type=submit]");
+  btn.disabled = true;
+  setMsg(true, "正在提交…");
 
-  // 打开邮件客户端，把申请信息发到你的邮箱
-  window.location.href = `mailto:${SHOP.email}?subject=${subject}&body=${body}`;
-  msg.className = "form-msg ok";
-  msg.textContent = "已为你打开邮件客户端，请点击「发送」，我们将在 24 小时内通过邮件为你开通。";
+  try {
+    // 通过 FormSubmit 中转，把申请发到 SHOP.email 对应的邮箱
+    const res = await fetch(`https://formsubmit.co/ajax/${SHOP.email}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      body: JSON.stringify({
+        _captcha: "false",
+        _subject: `[Orgc 开通申请] ${nick} · ${game}`,
+        称呼昵称: nick,
+        邮箱: email,
+        服务器类型: game,
+        详细介绍: desc || "（未填写）",
+      }),
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    if (data.success === "false") throw new Error(data.message || "发送失败");
+    setMsg(true, "申请已提交！我们会在 24 小时内通过邮件为你开通。");
+    form.reset();
+  } catch (err) {
+    setMsg(false, "提交失败，请重试，或直接邮件联系 " + SHOP.email);
+  } finally {
+    btn.disabled = false;
+  }
 });
