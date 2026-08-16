@@ -222,8 +222,8 @@
             <input type="text" id="nick" name="nick" placeholder="例如：小舟" autocomplete="off" />
           </div>
           <div class="field">
-            <label for="contact">常用联系方式</label>
-            <input type="text" id="contact" name="contact" placeholder="QQ / 微信 / 邮箱" autocomplete="off" />
+            <label for="email">常用邮箱</label>
+            <input type="email" id="email" name="email" placeholder="用于接收开通通知" autocomplete="email" />
           </div>
           <div class="field">
             <label for="game">想开的服务器类型</label>
@@ -287,22 +287,16 @@
         <span class="price" id="pay-price"><b>¥0</b></span>
       </div>
       <p class="pay-tip">
-        请使用手机打开对应付款码扫码支付，支付完成后<b>截图付款记录</b>，
-        并添加下方客服微信备注你购买的机型，我们将在 <b>24 小时内</b>为你开通机位。
+        请使用<b>微信</b>扫描下方收款码完成支付，支付后<b>保存付款截图</b>，
+        并在页面申请表单中填写你的<b>邮箱</b>，我们将在 <b>24 小时内</b>为你开通机位并通过邮件通知你。
       </p>
-
-      <div class="pay-tabs" id="pay-tabs" role="tablist">
-        <button class="ptab active" data-ch="wechat" role="tab" aria-selected="true">微信支付</button>
-        <button class="ptab" data-ch="alipay" role="tab" aria-selected="false">支付宝</button>
-      </div>
 
       <div class="pay-qr">
         <img id="pay-wei" src="assets/pay-wechat.png" alt="微信收款码" />
-        <img id="pay-ali" src="assets/pay-alipay.png" alt="支付宝收款码" hidden />
-        <div class="qr-placeholder" id="qr-placeholder" hidden>收款码尚未上传，请直接联系客服开通</div>
+        <div class="qr-placeholder" id="qr-placeholder" hidden>收款码尚未上传，请联系客服开通</div>
       </div>
 
-      <p class="pay-contact">客服微信：<b class="contact-val" id="pay-contact"></b></p>
+      <p class="pay-contact">咨询 / 开通进度，请邮件联系：<b class="contact-val" id="pay-contact"></b></p>
     </div>
   </div>
 

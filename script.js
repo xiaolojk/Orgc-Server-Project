@@ -42,13 +42,10 @@ const countObserver = new IntersectionObserver(
 document.querySelectorAll("[data-count]").forEach((el) => countObserver.observe(el));
 
 // ---------- 收款与客服配置 ----------
-// TODO：把这里改成你自己的客服联系方式
+// TODO：把这里改成你自己的邮箱，用于接收申请 / 开通消息
 const SHOP = {
-  contact: "Orgc 服务中心", // 客服微信号 / 客服称呼
-  images: {
-    wechat: "assets/pay-wechat.png",
-    alipay: "assets/pay-alipay.png",
-  },
+  email: "这里填写你的邮箱@example.com", // 接收申请信息的邮箱
+  qr: "assets/pay-wechat.png",
 };
 
 // ---------- 付款弹窗 ----------
@@ -57,47 +54,21 @@ const payPlan = document.getElementById("pay-plan");
 const payPrice = document.getElementById("pay-price");
 const payContact = document.getElementById("pay-contact");
 const payWei = document.getElementById("pay-wei");
-const payAli = document.getElementById("pay-ali");
 const qrPlaceholder = document.getElementById("qr-placeholder");
-const payTabs = document.getElementById("pay-tabs");
 
-payContact.textContent = SHOP.contact;
+payContact.textContent = SHOP.email;
 
-// 收款码图片加载失败时，记录缺失渠道并显示占位提示
-const missingQr = new Set();
-let currentChannel = "wechat";
-[["wechat", payWei], ["alipay", payAli]].forEach(([ch, img]) => {
-  img.addEventListener("error", () => {
-    missingQr.add(ch);
-    refreshQr();
-  });
+// 收款码图片加载失败时，显示占位提示
+payWei.addEventListener("error", () => {
+  qrPlaceholder.hidden = false;
 });
-
-const refreshQr = () => {
-  payWei.hidden = currentChannel !== "wechat" || missingQr.has("wechat");
-  payAli.hidden = currentChannel !== "alipay" || missingQr.has("alipay");
-  qrPlaceholder.hidden = !missingQr.has(currentChannel);
-};
-
-const switchChannel = (channel) => {
-  currentChannel = channel;
-  payTabs.querySelectorAll(".ptab").forEach((t) => {
-    const on = t.dataset.ch === channel;
-    t.classList.toggle("active", on);
-    t.setAttribute("aria-selected", on);
-  });
-  refreshQr();
-};
-
-payTabs.addEventListener("click", (e) => {
-  const tab = e.target.closest(".ptab");
-  if (tab) switchChannel(tab.dataset.ch);
+payWei.addEventListener("load", () => {
+  qrPlaceholder.hidden = true;
 });
 
 const openPayModal = (plan, price) => {
   payPlan.textContent = plan;
   payPrice.innerHTML = `<b>${price}</b>`;
-  switchChannel("wechat");
   payModal.classList.add("open");
   payModal.setAttribute("aria-hidden", "false");
   document.body.classList.add("modal-lock");
@@ -122,22 +93,35 @@ document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") closePayModal();
 });
 
-// ---------- 申请表单 ----------
+// ---------- 申请表单（通过邮件发送给你） ----------
 const form = document.getElementById("apply-form");
 const msg = document.getElementById("form-msg");
 
 form.addEventListener("submit", (ev) => {
   ev.preventDefault();
   const nick = form.nick.value.trim();
-  const contact = form.contact.value.trim();
+  const email = form.email.value.trim();
   const game = form.game.value;
+  const desc = form.desc.value.trim();
 
-  if (!nick || !contact || !game) {
+  if (!nick || !email || !game) {
     msg.className = "form-msg err";
-    msg.textContent = "请填写你的称呼、联系方式，并选择服务器类型。";
+    msg.textContent = "请填写你的称呼、常用邮箱，并选择服务器类型。";
     return;
   }
+
+  const subject = encodeURIComponent(`[Orgc 开通申请] ${nick} · ${game}`);
+  const body = encodeURIComponent(
+    "这是一封来自 Orgc 云网站的申请信息：\n\n" +
+    `称呼 / 昵称：${nick}\n` +
+    `邮箱：${email}\n` +
+    `服务器类型：${game}\n` +
+    `详细介绍：${desc ? desc : "（未填写）"}\n\n` +
+    "请在 24 小时内处理该开通申请，谢谢！"
+  );
+
+  // 打开邮件客户端，把申请信息发到你的邮箱
+  window.location.href = `mailto:${SHOP.email}?subject=${subject}&body=${body}`;
   msg.className = "form-msg ok";
-  msg.textContent = `已收悉！请在下单免费版后，添加客服「${SHOP.contact}」发送你的申请信息，我们将在 24 小时内为你开通。`;
-  form.reset();
+  msg.textContent = "已为你打开邮件客户端，请点击「发送」，我们将在 24 小时内通过邮件为你开通。";
 });
