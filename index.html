@@ -149,7 +149,7 @@
           </ul>
           <div class="plan-foot">
             <span class="price"><b>¥9.9</b> / 月</span>
-            <a href="#apply" class="btn btn-outline">购买此款</a>
+            <a href="#pay-modal" class="btn btn-outline pay-btn" data-plan="Orgc · 基础款" data-price="¥9.9 / 月">购买此款</a>
           </div>
         </article>
         <!-- 进阶款 -->
@@ -167,7 +167,7 @@
           </ul>
           <div class="plan-foot">
             <span class="price"><b>¥19.9</b> / 月</span>
-            <a href="#apply" class="btn btn-primary">购买此款</a>
+            <a href="#pay-modal" class="btn btn-primary pay-btn" data-plan="Orgc · 进阶款" data-price="¥19.9 / 月">购买此款</a>
           </div>
         </article>
       </div>
@@ -212,7 +212,7 @@
           <p>留下你的信息，我们会在 24 小时内回复。信息仅用于审核与联系，绝不外泄。</p>
           <div class="apply-note">
             <span class="dot"></span>
-            <span>当前表单为演示 Demo，正式开启后可接入提交。</span>
+            <span>免费版面向在校学生开放，提交申请后我们将在 24 小时内完成审核并联系你。</span>
           </div>
         </div>
 
@@ -275,6 +275,36 @@
       </div>
     </div>
   </section>
+
+  <!-- ======= 付款弹窗 ======= -->
+  <div class="pay-modal" id="pay-modal" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="pay-overlay" data-close></div>
+    <div class="pay-box">
+      <button class="pay-close" data-close aria-label="关闭">&times;</button>
+
+      <div class="pay-head">
+        <h3 id="pay-plan">选择机型</h3>
+        <span class="price" id="pay-price"><b>¥0</b></span>
+      </div>
+      <p class="pay-tip">
+        请使用手机打开对应付款码扫码支付，支付完成后<b>截图付款记录</b>，
+        并添加下方客服微信备注你购买的机型，我们将在 <b>24 小时内</b>为你开通机位。
+      </p>
+
+      <div class="pay-tabs" id="pay-tabs" role="tablist">
+        <button class="ptab active" data-ch="wechat" role="tab" aria-selected="true">微信支付</button>
+        <button class="ptab" data-ch="alipay" role="tab" aria-selected="false">支付宝</button>
+      </div>
+
+      <div class="pay-qr">
+        <img id="pay-wei" src="assets/pay-wechat.png" alt="微信收款码" />
+        <img id="pay-ali" src="assets/pay-alipay.png" alt="支付宝收款码" hidden />
+        <div class="qr-placeholder" id="qr-placeholder" hidden>收款码尚未上传，请直接联系客服开通</div>
+      </div>
+
+      <p class="pay-contact">客服微信：<b class="contact-val" id="pay-contact"></b></p>
+    </div>
+  </div>
 
   <!-- ======= 页脚 ======= -->
   <footer class="footer">
