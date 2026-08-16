@@ -44,7 +44,7 @@ document.querySelectorAll("[data-count]").forEach((el) => countObserver.observe(
 // ---------- 收款与客服配置 ----------
 // TODO：把这里改成你自己的邮箱，用于接收申请 / 开通消息
 const SHOP = {
-  email: "这里填写你的邮箱@example.com", // 接收申请信息的邮箱
+  email: "3980970310@qq.com", // 接收申请信息的邮箱
   qr: "assets/pay-wechat.png",
 };
 
