@@ -314,8 +314,36 @@
         <span class="brand-name">Orgc 云</span>
       </a>
       <p class="footer-note">免费服务器发放计划 · 由热爱支撑，为梦想护航</p>
+      <p class="footer-contact">申请 / 咨询邮件：<b id="footer-qq"></b></p>
     </div>
   </footer>
+
+  <!-- ======= 聊天小框 ======= -->
+  <button class="chat-fab" id="chatFab" aria-label="打开客服聊天" aria-expanded="false">
+    <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5c-1 0-2-.17-2.9-.48L4 21l1.4-3.7A8.5 8.5 0 1 1 21 11.5Z"/>
+    </svg>
+  </button>
+
+  <div class="chat-panel" id="chatPanel" aria-hidden="true">
+    <div class="chat-head">
+      <div class="chat-head-txt">
+        <b>Orgc 客服</b>
+        <span>消息直接发到邮箱 <b class="chat-mail" id="chat-mail"></b>，我们尽快回复</span>
+      </div>
+      <button class="chat-close" data-close aria-label="关闭">×</button>
+    </div>
+    <div class="chat-body" id="chatBody"></div>
+    <div class="chat-actions" id="chatActions">
+      <button class="chat-act" data-boot="open">我要开通</button>
+      <button class="chat-act" data-boot="chat">随便聊聊</button>
+    </div>
+    <div class="chat-input">
+      <textarea id="chatText" rows="2" placeholder="输入你想说的话…"></textarea>
+      <button id="chatSend">发送</button>
+    </div>
+    <div class="chat-foot">点「发送」会打开邮件客户端，内容直接发到上面的邮箱；你的回复我们会通过邮件回到你邮箱。</div>
+  </div>
 
   <script src="script.js"></script>
 </body>
